@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
+using NZworks.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,10 @@ builder.Services.AddHttpLogging(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<NzWalksDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectionString"));
+});
 
 var app = builder.Build();
 
