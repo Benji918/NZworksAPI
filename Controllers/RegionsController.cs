@@ -19,18 +19,52 @@ namespace NZworks.Controllers
 
         }
 
-        [HttpGet("{Id}")]
+        [HttpPost]
+        [SwaggerOperation(
+            Summary = "Create a region",
+            Description = "Create a region in the DB"
+        )]
+        public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDTO addRegionRequestDTO)
+        {
+            // Map DTO to domain model
+            var region = new Region
+            {
+                Name = addRegionRequestDTO.Name,
+                Code = addRegionRequestDTO.Code,
+                RegionImageUrl = addRegionRequestDTO.RegionImageUrl
+            };
+
+
+            await dbContext.Regions.AddAsync(region);
+            await dbContext.SaveChangesAsync();
+
+            // Map doman model back to DTO
+            var regionDTO = new RegionDTO
+            {
+                Id = region.Id,
+                Code = region.Code,
+                Name = region.Name,
+                RegionImageUrl = region.RegionImageUrl
+            };
+
+            return CreatedAtAction(
+                actionName: nameof(GetRegionById), 
+                routeValues: new { id = regionDTO.Id }, 
+                value: regionDTO);
+        }
+
+        [HttpGet("{id:Guid}")]
         [SwaggerOperation(
             Summary = "Get region by ID",
             Description = "Get speciic region by ID"
         )]
-        public async Task<IActionResult> GetRegionById(Guid Id)
+        public async Task<IActionResult> GetRegionById(Guid id)
         {
-            var test = await dbContext.Regions.FindAsync(Id);
+            var test = await dbContext.Regions.FindAsync(id);
 
-            Console.WriteLine(test);
+            Console.WriteLine(test.Name);
 
-            var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Id == Id);
+            var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Id == id);
 
             if (region == null)
             {
