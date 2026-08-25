@@ -19,6 +19,38 @@ namespace NZworks.Controllers
 
         }
 
+        [HttpPatch]
+        [SwaggerOperation(
+            Summary = "Update a region",
+            Description = "Update a region in the DB"
+        )]
+        public async Task<IActionResult> UpdateRegion(Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
+        {
+            var region = await dbContext.Regions.FindAsync(id);
+            if (region == null)
+            {
+                return NotFound();
+            }
+
+            // Update the region properties
+            region.Name = updateRegionRequestDTO.Name;
+            region.Code = updateRegionRequestDTO.Code;
+            region.RegionImageUrl = updateRegionRequestDTO.RegionImageUrl;
+
+            await dbContext.SaveChangesAsync();
+
+            // Map domain model back to DTO
+            RegionDTO regionDTO = new RegionDTO
+            {
+                Id = region.Id,
+                Code = region.Code,
+                Name = region.Name,
+                RegionImageUrl = region.RegionImageUrl
+            };
+
+            return Ok(regionDTO);
+        }
+
         [HttpPost]
         [SwaggerOperation(
             Summary = "Create a region",
@@ -27,7 +59,7 @@ namespace NZworks.Controllers
         public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDTO addRegionRequestDTO)
         {
             // Map DTO to domain model
-            var region = new Region
+            Region region = new Region
             {
                 Name = addRegionRequestDTO.Name,
                 Code = addRegionRequestDTO.Code,
@@ -48,8 +80,8 @@ namespace NZworks.Controllers
             };
 
             return CreatedAtAction(
-                actionName: nameof(GetRegionById), 
-                routeValues: new { id = regionDTO.Id }, 
+                actionName: nameof(GetRegionById),
+                routeValues: new { id = regionDTO.Id },
                 value: regionDTO);
         }
 
