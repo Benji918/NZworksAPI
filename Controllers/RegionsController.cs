@@ -19,6 +19,29 @@ namespace NZworks.Controllers
 
         }
 
+        [HttpDelete]
+        [SwaggerOperation(
+            Summary = "Delete a region",
+            Description = "Delete a region in the DB"
+        )]
+        public async Task<IActionResult> DeleteRegion(Guid id)
+        {
+
+            // Check if region exists
+            var region = await dbContext.Regions.FindAsync(id);
+            if (region == null)
+            {
+                return NotFound();
+            }
+
+            //Delete the region
+            dbContext.Regions.Remove(region);
+            await dbContext.SaveChangesAsync();
+
+
+            return NoContent();
+        }
+
         [HttpPatch]
         [SwaggerOperation(
             Summary = "Update a region",
@@ -26,6 +49,7 @@ namespace NZworks.Controllers
         )]
         public async Task<IActionResult> UpdateRegion(Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
+            // Check if region exists
             var region = await dbContext.Regions.FindAsync(id);
             if (region == null)
             {
