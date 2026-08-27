@@ -8,10 +8,16 @@ namespace NZworks.Repositories
     {
         private readonly NzWalksDBContext _dbcontext;
 
-        public SQLRegionRepository(NzWalksDBContext dBcontext)
+        public SQLRegionRepository(NzWalksDBContext dBcontext) => _dbcontext = dBcontext;
+
+        public async Task<Region> CreateAsync(Region region)
         {
-            _dbcontext = dBcontext;
+            await _dbcontext.Regions.AddAsync(region);
+            await _dbcontext.SaveChangesAsync();
+            return region;
+
         }
+
 
         public async Task<List<Region>> GetAllAsync()
         {
@@ -22,5 +28,7 @@ namespace NZworks.Repositories
         {
             return await _dbcontext.Regions.FirstOrDefaultAsync(r => r.Id == id);
         }
+
+
     }
 }

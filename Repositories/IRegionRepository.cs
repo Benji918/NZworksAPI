@@ -8,5 +8,9 @@ namespace NZworks.Repositories
 
         Task<Region> GetById(Guid id);
 
+        Task<Region> CreateAsync(Region region);
+
+        Task<Region> UpdateAsync(Guid id, Region region);
+
     }
 }

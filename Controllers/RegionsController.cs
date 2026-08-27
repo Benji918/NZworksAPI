@@ -94,8 +94,7 @@ namespace NZworks.Controllers
             };
 
 
-            await dbContext.Regions.AddAsync(region);
-            await dbContext.SaveChangesAsync();
+            var region_rep = _regionRepository.CreateAsync(region);
 
             // Map doman model back to DTO
             var regionDTO = new RegionDTO
