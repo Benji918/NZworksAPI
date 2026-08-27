@@ -119,11 +119,11 @@ namespace NZworks.Controllers
         )]
         public async Task<IActionResult> GetRegionById(Guid id)
         {
-            var test = await dbContext.Regions.FindAsync(id);
+            //var test = await dbContext.Regions.FindAsync(id);
 
-            Console.WriteLine(test.Name);
+            //Console.WriteLine(test.Name);
 
-            var region = await dbContext.Regions.FirstOrDefaultAsync(r => r.Id == id);
+            var region = await _regionRepository.GetById(id: id);
 
             if (region == null)
             {

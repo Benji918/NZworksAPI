@@ -17,5 +17,10 @@ namespace NZworks.Repositories
         {
             return await _dbcontext.Regions.ToListAsync();
         }
+
+        public async Task<Region> GetById(Guid id)
+        {
+            return await _dbcontext.Regions.FirstOrDefaultAsync(r => r.Id == id);
+        }
     }
 }

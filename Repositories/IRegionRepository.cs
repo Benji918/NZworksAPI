@@ -6,5 +6,7 @@ namespace NZworks.Repositories
     {
         Task<List<Region>> GetAllAsync();
 
+        Task<Region> GetById(Guid id);
+
     }
 }
