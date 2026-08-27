@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NZworks.Data;
 using NZworks.Models.Domain;
 using NZworks.Models.DTO;
+using NZworks.Repositories;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace NZworks.Controllers
@@ -13,9 +14,11 @@ namespace NZworks.Controllers
     public class RegionsController : ControllerBase
     {
         private readonly NzWalksDBContext dbContext;
-        public RegionsController(NzWalksDBContext dbContext)
+        private readonly IRegionRepository _regionRepository;
+        public RegionsController(NzWalksDBContext dbContext, IRegionRepository regionRepository)
         {
             this.dbContext = dbContext;
+            _regionRepository = regionRepository;
 
         }
 
@@ -144,10 +147,10 @@ namespace NZworks.Controllers
             Summary = "Get all regions",
             Description = "Get all regions in New Zealand"
         )]
-        public IActionResult GetAllRegions()
+        public async Task<IActionResult> GetAllRegions()
         {
 
-            var regions = dbContext.Regions.ToList();
+            var regions = await _regionRepository.GetAllAsync();
 
             //Map Domain models to DTO
             var regionsDTO = new List<RegionDTO>();
