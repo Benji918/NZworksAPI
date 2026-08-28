@@ -30,20 +30,17 @@ namespace NZworks.Controllers
         public async Task<IActionResult> DeleteRegion(Guid id)
         {
 
-            // Check if region exists
-            var region = await dbContext.Regions.FindAsync(id);
-            if (region == null)
+            // Delete region exists
+            var region = await _regionRepository.DeleteAsync(id: id);
+
+            if (region is false)
             {
                 return NotFound();
             }
 
-            //Delete the region
-            dbContext.Regions.Remove(region);
-            await dbContext.SaveChangesAsync();
-
-
             return NoContent();
         }
+
 
         [HttpPatch]
         [SwaggerOperation(
@@ -52,19 +49,22 @@ namespace NZworks.Controllers
         )]
         public async Task<IActionResult> UpdateRegion(Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
-            // Check if region exists
-            var region = await dbContext.Regions.FindAsync(id);
-            if (region == null)
+            // Map DTO to model
+            var regionDTOModel = new Region
+            {
+
+                Code = updateRegionRequestDTO.Code,
+                Name = updateRegionRequestDTO.Name,
+                RegionImageUrl = updateRegionRequestDTO.RegionImageUrl,
+            };
+
+
+            Region region = await _regionRepository.UpdateAsync(id, regionDTOModel);
+
+            if (region is null)
             {
                 return NotFound();
             }
-
-            // Update the region properties
-            region.Name = updateRegionRequestDTO.Name;
-            region.Code = updateRegionRequestDTO.Code;
-            region.RegionImageUrl = updateRegionRequestDTO.RegionImageUrl;
-
-            await dbContext.SaveChangesAsync();
 
             // Map domain model back to DTO
             RegionDTO regionDTO = new RegionDTO

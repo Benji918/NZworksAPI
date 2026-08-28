@@ -12,5 +12,7 @@ namespace NZworks.Repositories
 
         Task<Region> UpdateAsync(Guid id, Region region);
 
+        Task<bool> DeleteAsync(Guid id);
+
     }
 }
