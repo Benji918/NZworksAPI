@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using NZworks.Data;
 using NZworks.Models.Domain;
@@ -15,11 +17,14 @@ namespace NZworks.Controllers
     {
         private readonly NzWalksDBContext dbContext;
         private readonly IRegionRepository _regionRepository;
-        public RegionsController(NzWalksDBContext dbContext, IRegionRepository regionRepository)
+        private readonly IMapper _mapper;
+
+        public RegionsController(NzWalksDBContext dbContext,
+            IRegionRepository regionRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
             _regionRepository = regionRepository;
-
+            this._mapper = mapper;
         }
 
         [HttpDelete]
@@ -152,19 +157,21 @@ namespace NZworks.Controllers
             var regions = await _regionRepository.GetAllAsync();
 
             //Map Domain models to DTO
-            var regionsDTO = new List<RegionDTO>();
-            foreach (var region in regions)
-            {
-                regionsDTO.Add(
-                        new RegionDTO
-                        {
-                            Id = region.Id,
-                            Code = region.Code,
-                            Name = region.Name,
-                            RegionImageUrl = region.RegionImageUrl
-                        }
-                    );
-            }
+            //var regionsDTO = new List<RegionDTO>();
+            //foreach (var region in regions)
+            //{
+            //    regionsDTO.Add(
+            //            new RegionDTO
+            //            {
+            //                Id = region.Id,
+            //                Code = region.Code,
+            //                Name = region.Name,
+            //                RegionImageUrl = region.RegionImageUrl
+            //            }
+            //        );
+            //}
+
+            var regionsDTO = _mapper.Map<List<RegionDTO>>(regions);
 
 
             return Ok(regionsDTO);

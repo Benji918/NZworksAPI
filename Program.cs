@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using NZworks.Data;
 using NZworks.Repositories;
-
+using NZworks.Mappings;
+using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 //Add http logging
@@ -26,9 +27,15 @@ builder.Services.AddDbContext<NzWalksDBContext>(options =>
 });
 
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+builder.Services.AddAutoMapper(cfg =>
+{
+
+    cfg.AddProfile<AutoMapperProfiles>();
+
+});
+
 
 var app = builder.Build();
-
 app.UseHttpLogging();
 
 if (app.Environment.IsDevelopment())
@@ -36,7 +43,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
