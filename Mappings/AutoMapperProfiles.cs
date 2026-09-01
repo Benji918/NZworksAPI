@@ -8,6 +8,7 @@ namespace NZworks.Mappings
         public AutoMapperProfiles()
         {
             CreateMap<Models.Domain.Region, Models.DTO.RegionDTO>().ReverseMap();
+            CreateMap<Models.Domain.Region, Models.DTO.AddRegionRequestDTO>().ReverseMap();
         }
     }
 

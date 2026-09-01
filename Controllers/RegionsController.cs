@@ -91,24 +91,27 @@ namespace NZworks.Controllers
         public async Task<IActionResult> CreateRegion([FromBody] AddRegionRequestDTO addRegionRequestDTO)
         {
             // Map DTO to domain model
-            Region region = new Region
-            {
-                Name = addRegionRequestDTO.Name,
-                Code = addRegionRequestDTO.Code,
-                RegionImageUrl = addRegionRequestDTO.RegionImageUrl
-            };
+            //Region region = new Region
+            //{
+            //    Name = addRegionRequestDTO.Name,
+            //    Code = addRegionRequestDTO.Code,
+            //    RegionImageUrl = addRegionRequestDTO.RegionImageUrl
+            //};
+            var region = _mapper.Map<Region>(addRegionRequestDTO);
 
 
             var region_rep = _regionRepository.CreateAsync(region);
 
             // Map doman model back to DTO
-            var regionDTO = new RegionDTO
-            {
-                Id = region.Id,
-                Code = region.Code,
-                Name = region.Name,
-                RegionImageUrl = region.RegionImageUrl
-            };
+            //var regionDTO = new RegionDTO
+            //{
+            //    Id = region.Id,
+            //    Code = region.Code,
+            //    Name = region.Name,
+            //    RegionImageUrl = region.RegionImageUrl
+            //};
+
+            var regionDTO = _mapper.Map<RegionDTO>(region);
 
             return CreatedAtAction(
                 actionName: nameof(GetRegionById),
@@ -135,13 +138,14 @@ namespace NZworks.Controllers
             }
 
             //Map the DTO
-            var regionDTO = new RegionDTO
-            {
-                Id = region.Id,
-                Code = region.Code,
-                Name = region.Name,
-                RegionImageUrl = region.RegionImageUrl
-            };
+            //var regionDTO = new RegionDTO
+            //{
+            //    Id = region.Id,
+            //    Code = region.Code,
+            //    Name = region.Name,
+            //    RegionImageUrl = region.RegionImageUrl
+            //};
+            var regionDTO = _mapper.Map<RegionDTO>(region);
 
             return Ok(regionDTO);
         }
