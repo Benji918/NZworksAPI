@@ -9,6 +9,7 @@ namespace NZworks.Mappings
         {
             CreateMap<Models.Domain.Region, Models.DTO.RegionDTO>().ReverseMap();
             CreateMap<Models.Domain.Region, Models.DTO.AddRegionRequestDTO>().ReverseMap();
+            CreateMap<Models.Domain.Walk, Models.DTO.AddWalkRequestDTO>().ReverseMap();
         }
     }
 
