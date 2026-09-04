@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZworks.Data;
 using NZworks.Models.Domain;
 using NZworks.Models.DTO;
+using NZworks.Repositories;
 
 namespace NZworks.Controllers
 {
@@ -12,10 +13,12 @@ namespace NZworks.Controllers
     public class WalksController : ControllerBase
     {
         private readonly NzWalksDBContext _dbcontext;
+        private readonly IWalkRepository _walkRepository;
 
-        public WalksController(NzWalksDBContext dbcontext)
+        public WalksController(NzWalksDBContext dbcontext, IWalkRepository walkRepository)
         {
             _dbcontext = dbcontext;
+            _walkRepository = walkRepository;
         }
 
         [HttpPost]
@@ -37,8 +40,7 @@ namespace NZworks.Controllers
                 DifficultyId = addWalkRequestDTO.DifficultyId
             };
             // Add the walk to the database
-            await _dbcontext.Walks.AddAsync(walk);
-            await _dbcontext.SaveChangesAsync();
+            walk = await _walkRepository.AddWalk(walk);
 
             return CreatedAtAction(nameof(GetWalkById), new { id = walk.Id }, walk);
         }
@@ -47,7 +49,7 @@ namespace NZworks.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWalkById(Guid id)
         {
-            var walk = await _dbcontext.Walks.FindAsync(id);
+            var walk = await _walkRepository.GetWalkById(id);
             if (walk == null)
             {
                 return NotFound();
