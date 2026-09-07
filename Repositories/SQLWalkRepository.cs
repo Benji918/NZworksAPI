@@ -1,4 +1,5 @@
-﻿using NZworks.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using NZworks.Data;
 using NZworks.Models.Domain;
 
 namespace NZworks.Repositories
@@ -9,6 +10,14 @@ namespace NZworks.Repositories
         public SQLWalkRepository(NzWalksDBContext dBContext)
         {
             _dbcontext = dBContext;
+        }
+
+        public async Task<List<Walk>> GetAllWalks()
+        {
+            return await _dbcontext.Walks
+                         .Include(d => d.Difficulty)
+                         .Include(r => r.Region)
+                         .ToListAsync();
         }
 
         public async Task<Walk> AddWalk(Walk walk)

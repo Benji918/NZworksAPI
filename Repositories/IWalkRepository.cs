@@ -10,6 +10,8 @@ namespace NZworks.Repositories
         Task<Walk> GetWalkById(Guid id);
 
         Task<bool> Delete(Guid id);
+
+        Task<List<Walk>> GetAllWalks();
     }
 
 }

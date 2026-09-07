@@ -22,7 +22,6 @@ namespace NZworks.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> AddWalk([FromBody] AddWalkRequestDTO addWalkRequestDTO)
         {
             if (addWalkRequestDTO == null)
@@ -57,6 +56,23 @@ namespace NZworks.Controllers
             return Ok(walk);
         }
 
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteWalk(Guid id)
+        {
+            var result = await _walkRepository.Delete(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllWalks()
+        {
+            var walks = await _walkRepository.GetAllWalks();
+            return Ok(walks);
+        }
     }
 }
