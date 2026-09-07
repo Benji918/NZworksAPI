@@ -97,6 +97,11 @@ namespace NZworks.Controllers
             //    Code = addRegionRequestDTO.Code,
             //    RegionImageUrl = addRegionRequestDTO.RegionImageUrl
             //};
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var region = _mapper.Map<Region>(addRegionRequestDTO);
 
 
