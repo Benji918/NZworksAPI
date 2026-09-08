@@ -12,6 +12,16 @@ namespace NZworks.Repositories
             _dbcontext = dBContext;
         }
 
+        public async Task<bool> RegionExists(Guid id)
+        {
+            return await _dbcontext.Regions.AnyAsync(r => r.Id == id);
+        }
+
+        public async Task<bool> DifficultyExists(Guid id)
+        {
+            return await _dbcontext.Difficulties.AnyAsync(d => d.Id == id);
+        }
+
         public async Task<List<Walk>> GetAllWalks()
         {
             return await _dbcontext.Walks

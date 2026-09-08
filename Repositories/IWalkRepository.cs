@@ -12,6 +12,10 @@ namespace NZworks.Repositories
         Task<bool> Delete(Guid id);
 
         Task<List<Walk>> GetAllWalks();
+
+        Task<bool> RegionExists(Guid id);
+
+        Task<bool> DifficultyExists(Guid id);
     }
 
 }

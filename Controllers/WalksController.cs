@@ -24,10 +24,28 @@ namespace NZworks.Controllers
         [HttpPost]
         public async Task<IActionResult> AddWalk([FromBody] AddWalkRequestDTO addWalkRequestDTO)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (addWalkRequestDTO == null)
             {
                 return BadRequest("Walk object is null");
             }
+
+            var regionexists = await _walkRepository.RegionExists(addWalkRequestDTO.RegionId);
+            if (!regionexists)
+            {
+                return BadRequest($"Region with id {addWalkRequestDTO.RegionId} does not exist");
+            }
+
+            var difficultyexists = await _walkRepository.DifficultyExists(addWalkRequestDTO.DifficultyId);
+            if (!difficultyexists)
+            {
+                return BadRequest($"Difficulty with id {addWalkRequestDTO.DifficultyId} does not exist");
+            }
+
             // Map the DTO to the domain model
             var walk = new Walk
             {
