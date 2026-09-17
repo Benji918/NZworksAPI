@@ -22,7 +22,8 @@ namespace NZworks.Repositories
             return await _dbcontext.Difficulties.AnyAsync(d => d.Id == id);
         }
 
-        public async Task<List<Walk>> GetAllWalks(string? name, Guid? regionId, Guid? difficultyId)
+        public async Task<List<Walk>> GetAllWalks(string? name, Guid? regionId,
+            Guid? difficultyId, bool? ascending)
         {
             var query = _dbcontext.Walks
                          .Include(d => d.Difficulty)
@@ -42,6 +43,11 @@ namespace NZworks.Repositories
             if (difficultyId.HasValue)
             {
                 query = query.Where(w => w.DifficultyId == difficultyId.Value);
+            }
+
+            if (ascending.HasValue)
+            {
+                query = ascending.Value ? query.OrderBy(w => w.Name) : query.OrderByDescending(w => w.Name);
             }
 
             return await query.ToListAsync();

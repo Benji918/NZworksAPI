@@ -88,9 +88,10 @@ namespace NZworks.Controllers
 
         //api/walks/?Name=abc&RegionId=xyz&DifficultyId=123
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks([FromQuery] string? name, [FromQuery] Guid? regionId, [FromQuery] Guid? difficultyId)
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? name, [FromQuery] Guid? regionId, [FromQuery] 
+                            Guid? difficultyId, [FromQuery] bool? ascending)
         {
-            var walks = await _walkRepository.GetAllWalks(name, regionId, difficultyId);
+            var walks = await _walkRepository.GetAllWalks(name, regionId, difficultyId, ascending);
             return Ok(walks);
         }
     }
