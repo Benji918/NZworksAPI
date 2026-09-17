@@ -86,10 +86,11 @@ namespace NZworks.Controllers
 
         }
 
+        //api/walks/?Name=abc&RegionId=xyz&DifficultyId=123
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks()
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? name, [FromQuery] Guid? regionId, [FromQuery] Guid? difficultyId)
         {
-            var walks = await _walkRepository.GetAllWalks();
+            var walks = await _walkRepository.GetAllWalks(name, regionId, difficultyId);
             return Ok(walks);
         }
     }

@@ -22,12 +22,29 @@ namespace NZworks.Repositories
             return await _dbcontext.Difficulties.AnyAsync(d => d.Id == id);
         }
 
-        public async Task<List<Walk>> GetAllWalks()
+        public async Task<List<Walk>> GetAllWalks(string? name, Guid? regionId, Guid? difficultyId)
         {
-            return await _dbcontext.Walks
+            var query = _dbcontext.Walks
                          .Include(d => d.Difficulty)
                          .Include(r => r.Region)
-                         .ToListAsync();
+                         .AsQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(w => w.Name.Contains(name));
+            }
+
+            if (regionId.HasValue)
+            {
+                query = query.Where(w => w.RegionId == regionId.Value);
+            }
+
+            if (difficultyId.HasValue)
+            {
+                query = query.Where(w => w.DifficultyId == difficultyId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Walk> AddWalk(Walk walk)

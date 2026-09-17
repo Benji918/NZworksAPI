@@ -11,7 +11,7 @@ namespace NZworks.Repositories
 
         Task<bool> Delete(Guid id);
 
-        Task<List<Walk>> GetAllWalks();
+        Task<List<Walk>> GetAllWalks(string? name, Guid? regionId, Guid? difficultyId);
 
         Task<bool> RegionExists(Guid id);
 
