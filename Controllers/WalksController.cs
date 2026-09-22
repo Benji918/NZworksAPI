@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZworks.Data;
 using NZworks.Models.Domain;
@@ -10,6 +11,7 @@ namespace NZworks.Controllers
     // api/works
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WalksController : ControllerBase
     {
         private readonly NzWalksDBContext _dbcontext;
@@ -88,7 +90,7 @@ namespace NZworks.Controllers
 
         //api/walks/?Name=abc&RegionId=xyz&DifficultyId=123
         [HttpGet]
-        public async Task<IActionResult> GetAllWalks([FromQuery] string? name, [FromQuery] Guid? regionId, [FromQuery] 
+        public async Task<IActionResult> GetAllWalks([FromQuery] string? name, [FromQuery] Guid? regionId, [FromQuery]
                             Guid? difficultyId, [FromQuery] bool? ascending)
         {
             var walks = await _walkRepository.GetAllWalks(name, regionId, difficultyId, ascending);

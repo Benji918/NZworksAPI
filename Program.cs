@@ -5,6 +5,7 @@ using NZworks.Repositories;
 using NZworks.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 //Add http logging
@@ -26,6 +27,9 @@ builder.Services.AddDbContext<NzWalksDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectionString"));
 });
+builder.Services.AddDbContext<NzWalksAuthDBContext>(options =>{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NzWalksAuthConnectionString"));
+});
 
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
@@ -45,7 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Auth0:Domain"],
-            ValidAudience = builder.Configuration["Auth0:Audience"]
+            ValidAudience = builder.Configuration["Auth0:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.
+            GetBytes(builder.Configuration["Jwt:Key"]))
         };
         options.Authority = builder.Configuration["Auth0:Domain"];
         options.Audience = builder.Configuration["Auth0:Audience"];
@@ -63,6 +69,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.UseAuthorization();
 app.MapControllers();
 
