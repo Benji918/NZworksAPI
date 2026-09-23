@@ -6,6 +6,7 @@ using NZworks.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 //Add http logging
@@ -27,7 +28,8 @@ builder.Services.AddDbContext<NzWalksDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectionString"));
 });
-builder.Services.AddDbContext<NzWalksAuthDBContext>(options =>{
+builder.Services.AddDbContext<NzWalksAuthDBContext>(options =>
+{
     options.UseSqlServer(builder.Configuration.GetConnectionString("NzWalksAuthConnectionString"));
 });
 
@@ -35,10 +37,14 @@ builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddAutoMapper(cfg =>
 {
-
     cfg.AddProfile<AutoMapperProfiles>();
-
 });
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("Nzwalks")
+    .AddEntityFrameworkStores<NzWalksAuthDBContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
