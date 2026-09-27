@@ -48,7 +48,7 @@ namespace NZworks.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return BadRequest(identityResult.Errors);
+                    return BadRequest(result.Errors);
                 }
             }
 
