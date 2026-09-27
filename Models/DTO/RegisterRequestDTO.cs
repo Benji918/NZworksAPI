@@ -12,6 +12,7 @@ namespace NZworks.Models.DTO
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [Required(ErrorMessage ="Enter the user role!")]
         public string[] Roles { get; set; }  // Optional: Roles for the user
 
     }
