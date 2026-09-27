@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NZworks.Data;
@@ -34,14 +35,16 @@ namespace NZworks.Controllers
             var user = await userManager.FindByNameAsync(request.Username);
             if (user != null && request.Roles != null)
             {
-                foreach (var role in request.Roles)
+                var result = await userManager.AddToRolesAsync(user, request.Roles);
+
+                if (!result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, role);
+                    return BadRequest(identityResult.Errors);
                 }
             }
 
-            // Implement registration logic here
-            return Ok(new { Message = "User registered successfully" });
+
+            return Ok(new { Message = "User registered successfully. Please login!" });
         }
     }
 }
